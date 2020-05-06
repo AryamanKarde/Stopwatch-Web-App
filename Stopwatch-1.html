@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <style>
+            body{
+                width: 100%;
+                text-align: center;
+            }
+            input{
+                border-radius: 10px;
+                margin: 10px auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Stopwatch</h1>
+        <div id="watch">
+            <span id="hour">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>:<span style="font-size: 10px" id="centiseconds">00</span>
+        </div>
+        <input type="button" id="reset" style="display: none" onclick="end()"/>
+        <input id="start" type="button" value="Start" onclick="start()" />
+        
+        <div id="Laps" style="display: none;width: 15%;margin: auto auto">
+            <ol>
+                
+            </ol>
+        </div>
+    </body>
+    <script>
+        let n;
+        function start(){
+            let m = document.body.querySelector("#start");
+            let reset = document.body.querySelector("#reset");
+            let centi = document.getElementById("centiseconds");
+            let second = document.getElementById("seconds");
+            let minute = document.getElementById("minutes");
+            let hour = document.getElementById("hour");
+            let cs = sec = min = hr = 0;
+            
+            reset.style.display = "inline";
+            
+            if(m.value == "Start"){
+                m.value = "Pause";
+                reset.value = "Laps";
+                
+                    cs = Number(centi.textContent) + 1;
+                    sec = Number(second.textContent) + 1;
+                    min = Number(minute.textContent) + 1;
+                    hr = Number(hour.textContent) + 1;
+                
+                n = setInterval(()=>{
+                    if(cs < 100){
+                        if(cs === 0){
+                            centi.textContent = '01';
+                            cs++;
+                        }
+                        else{
+                            centi.textContent = String(cs).padStart(2,'0');
+                            cs++;
+                        }
+                    }
+                    if(cs == 100){
+                        cs = 0;
+                        if(sec === 0){
+                            second.textContent = '01';
+                            sec++;
+                        }
+                        else{
+                            second.textContent = String(sec).padStart(2,'0');
+                            sec++;
+                        }
+                    }
+                    if(sec == 60){
+                        sec = 0;
+                        if(min === 0){
+                            minute.textContent = '01';
+                            min++;
+                        }
+                        else{
+                            minute.textContent = String(min).padStart(2,'0');
+                            min++;
+                        }
+                    }
+                    if(min == 60){
+                        min = 0;
+                        if(hr === 0){
+                            hour.textContent = '01';
+                            hr++;
+                        }
+                        else{
+                            hour.textContent = String(hr).padStart(2,'0');
+                            hr++;
+                        }
+                    }
+                },10);
+            }
+            else{
+                m.value = "Start";
+                clearInterval(n);
+                reset.value = "Reset";
+            }
+        }
+        
+        function end(){
+                let reset = document.body.querySelector("#reset");
+                let centi = document.getElementById("centiseconds");
+                let second = document.getElementById("seconds");
+                let minute = document.getElementById("minutes");
+                let hour = document.getElementById("hour");
+                let box = document.querySelector("#Laps");
+                
+            if(reset.value == "Laps"){
+                    
+                    let string =  `${hour.textContent.padStart(2,'0') +":"+ minute.textContent.padStart(2,'0') + ":" + second.textContent.padStart(2,'0') +":"+ centi.textContent.padStart(2,'0')}`
+                    let text = document.createTextNode(string);
+                    
+                    box.children[0].append(document.createElement("li"));
+                    box.children[0].lastChild.append(text);
+                    box.style.display = "block";
+                }
+            
+                if(reset.value == "Reset"){
+                    while(box.children[0].firstChild){
+                        box.children[0].removeChild(box.children[0].firstChild);
+                    }
+                    box.style.display = "none";
+                    let v = String(0).padStart(2,'0');
+                    hour.textContent = minute.textContent = second.textContent =  centi.textContent = v;
+                    reset.style.display = "none";
+                }
+            }
+    </script>
+</html>
